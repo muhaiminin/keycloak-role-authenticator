@@ -44,10 +44,12 @@ public class ClientRoleAuthenticator implements Authenticator, AuthenticatorFact
             return;
         }
 
+        String msg = String.format("You're not authorized for the resource %s", client.getClientId());
         Response response = Response.status(Response.Status.UNAUTHORIZED)
-                .entity(new OAuth2ErrorRepresentation("invalid", "Invalid user credentials"))
-                .type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(msg)
+                .type(MediaType.TEXT_PLAIN_TYPE)
                 .build();
+        log.info("Rejected, user '{}' for client '{}'", user.getUsername(), client.getClientId());
         context.failure(AuthenticationFlowError.INVALID_USER, response);
     }
 
